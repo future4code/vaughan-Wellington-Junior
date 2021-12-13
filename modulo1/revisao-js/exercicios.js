@@ -32,12 +32,12 @@ function retornaNumerosParesElevadosADois(array) {
     const arrayNumerosPares = array.filter(npar => (npar % 2) == 0)
     const arrayElevada = arrayNumerosPares.map((numeros)=>{return Math.pow(numeros, 2)})
     return arrayElevada
-    
-
 }
 
 // EXERCÍCIO 06
 function retornaMaiorNumero(array) {
+    const maiorNumero = Math.max(array)
+    return maiorNumero
   
 }
 
