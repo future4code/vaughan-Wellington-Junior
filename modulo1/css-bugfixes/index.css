@@ -10,10 +10,12 @@
 }
 
 h2 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #fe7e02;
     padding: 10px 5px 10px 5px;
     color: white;
     text-align: center;
+    
 }
 
 input {
@@ -40,6 +42,7 @@ div>p:first-child {
     height: 40px;
     border-radius: 5px;
     font-size: 20px;
+    font-family: "Roboto";
     color: white;
 }
 
@@ -49,7 +52,8 @@ div>p:first-child {
 
 .container {
     height: 500px;
-    text-align: center;
+    font-family: "Roboto";
+    text-align: center;    
     padding-top: 10%;
 }
 
@@ -82,6 +86,7 @@ div>p:first-child {
     color: #c44f00;
     padding: 100px 0;
     font-size: 60px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 
@@ -94,17 +99,20 @@ div>p:first-child {
 div:nth-child(2),
 div:last-child {
     text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
 }
 
 table {
-    width: 60%;
+    width: 50%;
     table-layout: fixed;
     border-collapse: collapse;
-    
+        
 }
 td {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     text-align: center;
-    padding-left: 40%;
+    padding-left: 50%;;
 }
 
 .img{
@@ -114,6 +122,7 @@ td {
 
 td button {
     background-color: #fadf63;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     width: 150px;
     height: 30px;
     border-radius: 5px;
@@ -139,6 +148,11 @@ td button:hover{
     border-radius: 5px;
     font-size: 10px;
     color: black;
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin-top: 5%;
+    
 }
 
 #back-button:hover {
