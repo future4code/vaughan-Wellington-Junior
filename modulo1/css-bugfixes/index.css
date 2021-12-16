@@ -109,6 +109,11 @@ td {
     padding-left: 40%;
 }
 
+.img{
+    max-width: 80px;
+    min-width: 80px;
+}
+
 td button {
     background-color: #fadf63;
     width: 150px;
