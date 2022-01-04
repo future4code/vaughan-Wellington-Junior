@@ -1,0 +1,86 @@
+*{
+    margin: 0;
+    padding: 0
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #EF843A;
+}
+
+.search{
+    display: flex;
+    justify-items: center;
+    padding: 5px;
+}
+
+.button-search{
+    margin: 4px;
+    max-height: 29px;
+    width: 40px;    
+}
+
+.lupa-button{
+    height: 20px;
+    width: 20px;
+}
+
+input[type="text" i]{
+    width: 200px;
+    padding: 5px 5px;
+    margin: 5px;    
+}
+
+footer{
+    padding: 10px 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #323B3E;
+}
+
+body{
+    min-height: 100vh;    
+}
+
+.main-home{
+    display: grid;
+    min-height: 82vh;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 20px;
+    padding-left: 20px;
+}
+
+.main-video{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px;
+    align-content: center;
+    align-items: center;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    }
+
+.video-thumb{
+    box-shadow: 3px 3px 3px darkgray;
+    padding: 5px 5px;
+    height: 230px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: space-between;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.video-thumb:hover{
+    background-color: rgba(169, 169, 169, 0.486);
+    transition: 0.5s;
+}
