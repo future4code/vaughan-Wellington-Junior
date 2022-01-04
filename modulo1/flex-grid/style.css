@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#conteudo-pagina {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    height: 50px;
+    background-color: mediumvioletred;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    align-items: center;
+}
+
+.icone-principal {
+    max-width: 30px;
+    max-height: 30px;
+    margin-inline:10px;
+}
+
+.icone {
+    max-width: 22px;
+    max-height: 22px;
+    float: left;
+    margin-inline:5px;
+}
+
+.icone-seta {
+    max-width: 22px;
+    max-height: 22px;
+    float: right;
+}
+
+footer {
+    height: 30px;
+    background-color: mediumvioletred;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+}
+
+#menu{
+    background-color: #f2d0e0;
+    width: 250px;
+}
+
+.item-menu {
+    margin:10px
+}
+
+#conteudo{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+.item-conteudo {
+    margin-inline: 10px;
+    text-align: center;
+    box-shadow: 3px 3px 3px darkgray;
+}
+
+.img-bolo {
+    max-height: 250px;
+    max-width: 250px;
+}
