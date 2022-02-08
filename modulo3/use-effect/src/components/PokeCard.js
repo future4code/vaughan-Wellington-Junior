@@ -19,19 +19,15 @@ function PokeCard (props) {
       })
   }
   
-  const firstLetterUpperCase = (nome) =>{
-    return nome.charAt(0).toUpperCase() + nome.slice(1)
-    }
-
   return (
     <div className="poke-card">
       <div className="poke-info">
 
-        <h2><strong>{firstLetterUpperCase(pokemon.name)}</strong></h2>
+        <h2><strong>{pokemon.name}</strong></h2>
 
         <p><strong>Peso: </strong>{pokemon.weight}kg</p>
 
-        {pokemon.types && <p><strong>Tipo:</strong>{firstLetterUpperCase(pokemon.types[0].type.name)}</p>}
+        {pokemon.types && <p><strong>Tipo:</strong>{pokemon.types[0].type.name}</p>}
 
       </div>    
 
