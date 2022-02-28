@@ -1,0 +1,124 @@
+.body{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+    width: 100%;
+    background-image: linear-gradient(to bottom, rgb(182, 182, 182), transparent);
+    border-radius: 15px;
+}
+
+.body>p{
+    padding: 15px;
+}
+
+.header-info{
+    display: flex;    
+    font-size: 25px;
+}
+.name{
+    font-weight: bold;
+    font-style: italic;
+}
+.age{
+    font-style: italic;
+}
+.bio{
+    margin-top: 4px;
+    font-style: italic;
+    font-size: 16px;
+}
+
+.body>img{    
+    width: 370px;
+    height: 425px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.match-text{
+    height: 30%;
+    position: absolute;
+    bottom: 0px;
+    width: 342px;
+    background-image: linear-gradient(to top, rgb(70, 70, 70), transparent);
+    border-radius: 15px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+    padding: 15px;
+    z-index: 2;
+}
+
+.buttoms{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+.yes-button{
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 100%;
+    background-color: transparent;
+    color: green;
+    border: 1px solid green;
+    font-size: 35px;
+}
+
+.yes-button:hover{
+    transition: 100ms;
+    color: white;
+    background-color: green;
+}
+
+.no-button{
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 100%;
+    background-color: transparent;
+    color: red;
+    border: 1px solid red;
+    font-size: 38px;
+}
+
+.no-button:hover{
+    transition: 100ms;
+    color: white;
+    background-color: red;
+}
+
+.home-header{
+    display: flex;
+    justify-content: end;
+    padding-top: 13px;
+    align-items: center;
+    padding-bottom: 2px;
+    margin-bottom: 8px;
+}
+
+.home-header>button{
+    cursor: pointer;
+    border: none;
+    color: green;
+    font-weight: 900;
+    padding: 0 10px;
+    border-radius: 55px;
+    background-color: transparent;
+    font-size: 25px;
+    box-shadow: 0px 0px 3px grey;
+}
+
+.home-header>button:hover{
+    transition: 100ms;
+    color: white;
+    background-color: green;
+}
+
+.home-text{
+    position: absolute;
+    left: 35% ;
+}
