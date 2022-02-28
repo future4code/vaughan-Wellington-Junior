@@ -10,12 +10,13 @@ import { goToFeedPage } from '../../routes/coordinator'
 
 const LoginBody = styled.div`
 display: flex;
-background-color: aqua;
+background-color: white;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+font-family: sans-serif;
 width: 100vw;
-height: 94.5vh;
+height: 93vh;
 `
 
 const InputContainer = styled.div`
@@ -24,6 +25,16 @@ flex-direction: column;
 width: 80vw;
 max-width: 450px;
 align-items: center;
+    >div>p>a{
+        text-decoration: none;
+        font-weight: bolder;
+        color: rgb(0, 121, 211);
+    }
+    >div>p>a:hover{
+        text-decoration: none;
+        font-weight: bolder;
+        color: rgb(0, 101, 211);
+    }
 `
 
 const LoginForm = styled.form`
@@ -34,13 +45,24 @@ max-width: 450px;
 align-items: center;
     >input{
         margin-bottom: 10px;
-        width: 92%;
-        padding: 15px;
+        width: 90%;
+        padding: 15px; 
+        border: 1px solid rgba(0,0,0,.1);
+        border-radius: 8px;
     }
     >button{
+        cursor: pointer;
         margin-bottom: 10px;
-        width: 100%;
-        padding: 10px;
+        color: white;
+        border: none;
+        background-color: rgb(0, 121, 211);
+        font-size: 18px;
+        width: 97%;
+        padding: 15px;
+        border-radius: 30px;
+    }
+    >button:hover{
+        background-color: rgb(0, 141, 211);
     }
 `
 
