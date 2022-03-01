@@ -7,6 +7,8 @@ import { goToPost } from "../../routes/coordinator"
 import useForm from "../../Hooks/useForm"
 import axios from "axios"
 import { TiArrowDownThick, TiArrowUpThick } from "react-icons/ti";
+import Loading from "../../components/Loading/Loading"
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const FeedBody = styled.div`
 display: flex;
@@ -15,7 +17,13 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 font-family: sans-serif;
-    >button{
+    >div{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    >div>button{
         cursor: pointer;
         margin-top: 15px;
         margin-bottom: 20px;
@@ -27,7 +35,7 @@ font-family: sans-serif;
         background-color: rgb(0, 121, 211);
         font-size: 15px;        
     }
-    >button:hover{
+    >div>button:hover{
         background-color: rgb(0, 141, 211);
     }
 `
@@ -165,10 +173,12 @@ const FeedPage = () => {
     const [size, setSize] = useState(10)
 
     const [posts, setPosts] = useState([])
+    
+    const [isLoading, setIsLoading] = useState( false )
 
     useEffect(()=>{
         getPosts()
-    },[size])    
+    },[page, size])    
     
     const increasePageSize = (event) => {
         console.log("aumentou")
@@ -195,53 +205,39 @@ const FeedPage = () => {
         goToPost(history, id)
     }
 
-    const votePositive = (id, idVote) => {
+    const posVote = 1
+
+    const negVote = -1
+
+    const voteButton = (id, value,  idVote) => {
         
         if (idVote !== null) {
 
             deletePostVote(id)
             
         } else {
+
+            toVote (id, value)
+        }
+    }        
+       
+    const toVote = (id, value) => {
         
         const body = {
-          direction: 1,
+              direction: value,
         };
-    
+        
         axios
-          .post(`${BASE_URL}/posts/${id}/votes`, body, {
+            .post(`${BASE_URL}/posts/${id}/votes`, body, {
             headers: {
-              Authorization: localStorage.getItem('token') ,
-            },
+                  Authorization: localStorage.getItem('token') ,
+                },
             })
             .then(
                 getPosts()
-            )            
+            )
             .catch((err) => {console.log(err.response)})
-        }}
-
-    const voteNegative = (id, idVote) => {
-
-        if (idVote !== null) {
-
-            deletePostVote(id)
-
-        } else {
-        
-            const body = {
-              direction: -1,
-            };
-        
-            axios
-              .post(`${BASE_URL}/posts/${id}/votes`, body, {
-                headers: {
-                  Authorization: localStorage.getItem('token') ,
-                },
-                })
-                .then(() => {
-                    getPosts()
-                })
-                .catch((err) => {console.log(err.response)})
-            }}    
+        }     
 
       const deletePostVote = (id) => {
         axios
@@ -283,13 +279,13 @@ const FeedPage = () => {
         </CardText>
         <CardNumbers>
             <div>
-                <button onClick={() => votePositive(post.id, post.userVote)}> 
+                <button onClick={() => voteButton(post.id, posVote, post.userVote)}> 
                 {selectedColorVoteLike(post.userVote)}
                 </button>
 
                 <p>{post.voteSum === null ? 0 : post.voteSum}</p>
                 
-                <button onClick={() => voteNegative(post.id, post.userVote)}> 
+                <button onClick={() => voteButton(post.id, negVote, post.userVote)}> 
                 {selectedColorVoteDislike(post.userVote)}
                 </button>               
             </div>
@@ -301,6 +297,7 @@ const FeedPage = () => {
     const [form, onChange, clear] = useForm({ title: "", body: "" })    
 
     const createPost = () => {
+        setIsLoading(true)
         axios.post(`${BASE_URL}/posts`, form, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -310,8 +307,11 @@ const FeedPage = () => {
             alert(res.data.message)
             getPosts()
             clear()
+            setIsLoading(false)
         })
-        .catch((err)=>alert(err.response.data.message))
+        .catch((err)=>{
+            setIsLoading(false)
+            alert(err.response.data.message)})
     }
 
     const onSubmitForm = (event) =>{
@@ -320,33 +320,35 @@ const FeedPage = () => {
     }
 
     return (
-        <FeedBody>
-            <PostBody onSubmit={onSubmitForm}>
-                <p>Faça uma publicação</p>
-                <input 
-                name={"title"}
-                value={form.title}
-                onChange={onChange}
-                placeholder={"Título"}
-                required
-                />
+        <FeedBody>{ posts != 0 ?
+            <div>
+                <PostBody onSubmit={onSubmitForm}>
+                    <p>Faça uma publicação</p>
+                    <input 
+                    name={"title"}
+                    value={form.title}
+                    onChange={onChange}
+                    placeholder={"Título"}
+                    required
+                    />
 
-                <input
-                name={"body"}
-                value={form.body}
-                onChange={onChange}
-                placeholder={"Texto"}
-                required
-                />
+                    <input
+                    name={"body"}
+                    value={form.body}
+                    onChange={onChange}
+                    placeholder={"Texto"}
+                    required
+                    />
 
-                <button 
-                type={"submit"}>Postar</button>
-            </PostBody>
+                    <button 
+                    type={"submit"}>{isLoading ? <CircularProgress color={"inherit"} size={24}/> : "Postar"}</button>
+                </PostBody>
 
-            {postCards}
+                {postCards}
 
-            <button onClick={increasePageSize}>CARREGAR MAIS</button>
+                <button onClick={increasePageSize}>CARREGAR MAIS</button>
 
+            </div> : <Loading/>}
         </FeedBody>
     )
 }

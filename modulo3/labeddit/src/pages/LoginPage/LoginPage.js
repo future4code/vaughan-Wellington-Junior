@@ -1,11 +1,12 @@
 import axios from "axios"
-import React from "react"
+import React, {useState} from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import useForm from '../../Hooks/useForm'
 import useUnprotectedPage from "../../Hooks/useUnprotectedPage"
 import {BASE_URL} from '../../routes/BASE_URL'
 import { goToFeedPage } from '../../routes/coordinator'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 
 const LoginBody = styled.div`
@@ -72,6 +73,7 @@ const LoginPage = ({ setRightButtonText }) => {
 
     const [form, onChange, clear] = useForm({email: "", password: ""})
     const naviHistory = useNavigate()
+    const [isLoading, setIsLoading] = useState( false )
 
     const onSubmitForm = (event) => {
         event.preventDefault()
@@ -79,14 +81,19 @@ const LoginPage = ({ setRightButtonText }) => {
     }
 
     const login = (history, setRightButtonText) => {
+        setIsLoading(true)
         axios.post(`${BASE_URL}/users/login`, form)
         .then((res) => {
             localStorage.setItem("token", res.data.token)
             clear()
+            setIsLoading(false)
             goToFeedPage(history)
             setRightButtonText("Logout")            
         })
-        .catch((err) => alert(err.response.data.message))
+        .catch((err) => {
+            setIsLoading(true)
+            alert(err.response.data.message)
+        })            
     }
     return (
         <LoginBody>
@@ -113,7 +120,8 @@ const LoginPage = ({ setRightButtonText }) => {
 
                     <button
                     type={"submit"}
-                    >Entrar</button>
+                    >{isLoading ? <CircularProgress color={"inherit"} size={24}/> : "Entrar"}
+                    </button>
 
                 </LoginForm>
 

@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import useForm from '../../Hooks/useForm'
@@ -6,6 +6,7 @@ import useUnprotectedPage from "../../Hooks/useUnprotectedPage"
 import axios from "axios"
 import { BASE_URL } from "../../routes/BASE_URL"
 import { goToFeedPage } from "../../routes/coordinator"
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const RegisterBody = styled.div`
 display: flex;
@@ -68,17 +69,22 @@ const RegisterPage = ({ setRightButtonText }) => {
     useUnprotectedPage()
 
     const history = useNavigate()
-    const [form, onChange, clear] = useForm({username: "",email: "", password: ""})
+    const [form, onChange, clear] = useForm({username: "",email: "", password: ""})    
+    const [isLoading, setIsLoading] = useState( false )
 
     const signUp = (history, setRightButtonText) => {
+        setIsLoading(true)
         axios.post(`${BASE_URL}/users/signup`, form)
         .then((res) => {
             localStorage.setItem("tokem", res.data.token)
             clear()
+            setIsLoading(false)
             goToFeedPage(history)
             setRightButtonText("Logout")
         })
-        .catch((err) => alert(err.response.data.message))
+        .catch((err) => {
+            setIsLoading(false)
+            alert(err.response.data.message)})
     }
 
     const onSubmitForm = (event) => {
@@ -118,7 +124,7 @@ const RegisterPage = ({ setRightButtonText }) => {
 
                     <button
                     type={"submit"}
-                    >Registrar</button>
+                    >{isLoading ? <CircularProgress color={"inherit"} size={24}/> : "Registrar"}</button>
 
                 </RegisterForm>
 

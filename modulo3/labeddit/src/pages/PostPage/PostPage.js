@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { useParams } from "react-router-dom"
 import useProtectedPage from "../../Hooks/useProtectedPage"
-import useRequestData from "../../Hooks/UseRequestData"
 import { BASE_URL } from "../../routes/BASE_URL"
 import useForm from "../../Hooks/useForm"
 import axios from "axios"
 import { TiArrowDownThick, TiArrowUpThick } from "react-icons/ti";
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Loading from "../../components/Loading/Loading"
 
 const FeedBody = styled.div`
 display: flex;
@@ -15,7 +16,15 @@ min-height: 94vh;
 flex-direction: column;
 align-items: center;
 font-family: sans-serif;
-    >button{
+    >div{
+    display: flex;
+    background-color: #FFFFFF;
+    min-height: 94vh;
+    flex-direction: column;
+    align-items: center;
+
+    }
+    >div>button{
         cursor: pointer;
         margin-top: 15px;
         margin-bottom: 20px;
@@ -27,7 +36,7 @@ font-family: sans-serif;
         background-color: rgb(0, 121, 211);
         font-size: 15px;        
     }
-    >button:hover{
+    >div>button:hover{
         background-color: rgb(0, 141, 211);
     }
 `
@@ -223,10 +232,12 @@ const PostPage = () => {
 
     const [comments, setComments] = useState([])
 
+    const [isLoading, setIsLoading] = useState( false )
+
     useEffect(()=>{
         getPost()
         getComments()
-    },[])
+    })
 
     const params = useParams()
 
@@ -254,57 +265,44 @@ const PostPage = () => {
 
     const commVote = "comments"
 
-    const votePositive = (id, type, idVote) => {
+    const posVote = 1
+
+    const negVote = -1
+
+    const voteButton = (id, value, type, idVote) => {
         
         if (idVote !== null) {
 
             deletePostVote(id, type)
             
         } else {
+
+            toVote (id, value, type)
+
+        }
+    }
+        
+       
+    const toVote = (id, value, type) => {
         
         const body = {
-          direction: 1,
+              direction: value,
         };
-    
+        
         axios
-          .post(`${BASE_URL}/${type}/${id}/votes`, body, {
+            .post(`${BASE_URL}/${type}/${id}/votes`, body, {
             headers: {
-              Authorization: localStorage.getItem('token') ,
-            },
+                  Authorization: localStorage.getItem('token') ,
+                },
             })
             .then(
                 getPost(),
                 getComments()
-            )            
+            )
             .catch((err) => {console.log(err.response)})
-        }}
+            }    
 
-    const voteNegative = (id, type, idVote) => {
-
-        if (idVote !== null) {
-
-            deletePostVote(id, type)
-
-        } else {
-        
-            const body = {
-              direction: -1,
-            };
-        
-            axios
-              .post(`${BASE_URL}/${type}/${id}/votes`, body, {
-                headers: {
-                  Authorization: localStorage.getItem('token') ,
-                },
-                })
-                .then(
-                    getPost(),
-                    getComments()
-                )
-                .catch((err) => {console.log(err.response)})
-            }}    
-
-      const deletePostVote = (id, type) => {
+    const deletePostVote = (id, type) => {
         axios
           .delete(`${BASE_URL}/${type}/${id}/votes`, {
             headers: {
@@ -345,12 +343,12 @@ const PostPage = () => {
         </CardText>
         <CardNumbers>
             <div>
-                <button onClick={() => votePositive(post.id, postVote, post.userVote)}>
+                <button onClick={() => voteButton(post.id, posVote, postVote, post.userVote)}>
                     {selectedColorVoteLike(post.userVote)}</button>
 
                 <p>{post.voteSum === null ? 0 : post.voteSum}</p>
 
-                <button onClick={() => voteNegative(post.id, postVote, post.userVote)}>
+                <button onClick={() => voteButton(post.id, negVote, postVote, post.userVote)}>
                     {selectedColorVoteDislike(post.userVote)}</button>               
             </div>
                 <p>{post.commentCount === null ? 'Nenhum Comentário' : `${post.commentCount} Comentários`}</p>
@@ -378,7 +376,9 @@ const PostPage = () => {
 
 
     const loadMoreComments = (event) => {
+        setIsLoading(true)
         setSize(size +10)
+        setIsLoading(false)
     }
 
     const commentCard = comments.map((item) => {
@@ -391,12 +391,12 @@ const PostPage = () => {
         </CommentText>
         <CommentNumbers>
             <div>
-                <button onClick={() => votePositive(item.id, commVote, item.userVote)}>
+                <button onClick={() => voteButton(item.id, posVote, commVote, item.userVote)}>
                     {selectedColorVoteLike(item.userVote)}</button>
 
                 <p>{item.voteSum === null ? 0 : item.voteSum}</p>
                 
-                <button onClick={() => voteNegative(item.id, commVote, item.userVote)}>
+                <button onClick={() => voteButton(item.id, negVote, commVote, item.userVote)}>
                     {selectedColorVoteDislike(item.userVote)}</button>               
             </div>
 
@@ -407,6 +407,7 @@ const PostPage = () => {
     const [form, onChange, clear] = useForm({ body: "" })    
 
     const createComment = () => {
+        setIsLoading(true)
         axios.post(`${BASE_URL}/posts/${postId}/comments`, form, {
             headers: {
                 Authorization: localStorage.getItem("token")
@@ -416,8 +417,11 @@ const PostPage = () => {
             alert(res.data.message)
             getComments()
             clear()
+            setIsLoading(false)
         })
-        .catch((err)=>alert(err.response.data.message))
+        .catch((err)=>{
+            setIsLoading(false)
+            alert(err.response.data.message)})
     }
 
     const onSubmitForm = (event) =>{
@@ -427,8 +431,9 @@ const PostPage = () => {
 
     return (
         <FeedBody>
-            {postCard}
-            <PostBody onSubmit={onSubmitForm}>
+            { choosenPost != 0 ? <div>
+                {postCard}
+                <PostBody onSubmit={onSubmitForm}>
                 <input
                 name={"body"}
                 value={form.body}
@@ -438,11 +443,15 @@ const PostPage = () => {
                 />
 
                 <button 
-                type={"submit"}>Postar</button>
+                type={"submit"}>
+                    {isLoading ? <CircularProgress color={"inherit"} size={24}/> : "Postar"}
+                    </button>
             </PostBody>
             {commentCard}
 
             <button onClick={loadMoreComments}>CARREGAR MAIS</button>
+
+            </div> : <Loading/>}
         </FeedBody>
     )
 }
