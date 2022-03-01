@@ -99,14 +99,16 @@ const LoginPage = ({ setRightButtonText }) => {
         axios.post(`${BASE_URL}/users/login`, form)
         .then((res) => {
             localStorage.setItem("token", res.data.token)
+            alert("Login realizado com sucesso")
             clear()
             setIsLoading(false)
             goToFeedPage(history)
             setRightButtonText("Logout")            
         })
-        .catch((err) => {
-            setIsLoading(true)
-            alert("Houve um erro ao tentar fazer Login, tente novamente")
+        .catch((err) => {            
+            console.log(err.data.response)
+            setIsLoading(false)
+            alert("Houve um erro ao tentar fazer Login, tente novamente")         
         })            
     }
     return (

@@ -91,14 +91,17 @@ const RegisterPage = ({ setRightButtonText }) => {
         axios.post(`${BASE_URL}/users/signup`, form)
         .then((res) => {
             localStorage.setItem("tokem", res.data.token)
+            alert("Conta registrada com sucesso")
             clear()
             setIsLoading(false)
             goToFeedPage(history)
             setRightButtonText("Logout")
         })
-        .catch((err) => {
+        .catch((err) => {            
+            console.log(err.data.response)
             setIsLoading(false)
-            alert("Houve um erro ao tentar fazer Registro, tente novamente")})
+            alert("Houve um erro ao tentar realizar seu registro, tente novamente")
+        })
     }
 
     const onSubmitForm = (event) => {

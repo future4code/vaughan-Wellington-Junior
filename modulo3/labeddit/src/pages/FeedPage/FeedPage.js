@@ -178,10 +178,9 @@ const FeedPage = () => {
 
     useEffect(()=>{
         getPosts()
-    },[page, size])    
-    
+    },[page, size])
+        
     const increasePageSize = (event) => {
-        console.log("aumentou")
         setSize(size +10)
     }
 
@@ -309,7 +308,8 @@ const FeedPage = () => {
             clear()
             setIsLoading(false)
         })
-        .catch((err)=>{
+        .catch((err)=>{            
+            console.log(err.data.response)
             setIsLoading(false)
             alert("Houve um erro na publicação, tente novamente")})
     }

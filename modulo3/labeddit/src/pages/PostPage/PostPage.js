@@ -237,14 +237,14 @@ const PostPage = () => {
     useEffect(()=>{
         getPost()
         getComments()
-    })
+    },[])
 
     const params = useParams()
 
     const postId = params.id
 
     async function getPost () { 
-        axios.get(`${BASE_URL}/posts?page=${page}&size=${size}`, {
+        axios.get(`${BASE_URL}/posts?page=${page}&size=${2000}`, {
         headers: {
             Authorization: localStorage.getItem('token')
         }
@@ -360,7 +360,7 @@ const PostPage = () => {
 
     const [size, setSize] = useState(10)
 
-    async function getComments () { 
+    function getComments () { 
         axios.get(`${BASE_URL}/posts/${postId}/comments?page=${page}&size=${size}`, {
         headers: {
             Authorization: localStorage.getItem('token')
@@ -372,13 +372,6 @@ const PostPage = () => {
     .catch((err) => {
         console.log(err)
     })
-    }
-
-
-    const loadMoreComments = (event) => {
-        setIsLoading(true)
-        setSize(size +10)
-        setIsLoading(false)
     }
 
     const commentCard = comments.map((item) => {
@@ -419,14 +412,21 @@ const PostPage = () => {
             clear()
             setIsLoading(false)
         })
-        .catch((err)=>{
+        .catch((err)=>{            
+            console.log(err.data.response)
             setIsLoading(false)
-            alert("Ocorreu um erro ao enviar seu comentário, tente novamente")})
+            alert("Houve um erro ao enviar seu comentário, tente novamente")})
     }
 
     const onSubmitForm = (event) =>{
         event.preventDefault()
         createComment()
+    }
+
+    
+
+    const loadMoreComments = (event) => {
+        setSize(size +10)
     }
 
     return (
@@ -449,7 +449,7 @@ const PostPage = () => {
             </PostBody>
             {commentCard}
 
-            <button onClick={loadMoreComments}>CARREGAR MAIS</button>
+            { comments < 10 ? <></> : <button onClick={loadMoreComments}>Carregar Mais</button> }
 
             </div> : <Loading/>}
         </FeedBody>
