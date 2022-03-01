@@ -414,14 +414,14 @@ const PostPage = () => {
             }
         })
         .then((res)=>{
-            alert(res.data.message)
+            alert("Comentário postado com sucesso!")
             getComments()
             clear()
             setIsLoading(false)
         })
         .catch((err)=>{
             setIsLoading(false)
-            alert(err.response.data.message)})
+            alert("Ocorreu um erro ao enviar seu comentário, tente novamente")})
     }
 
     const onSubmitForm = (event) =>{

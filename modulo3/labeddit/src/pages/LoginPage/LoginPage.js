@@ -7,6 +7,7 @@ import useUnprotectedPage from "../../Hooks/useUnprotectedPage"
 import {BASE_URL} from '../../routes/BASE_URL'
 import { goToFeedPage } from '../../routes/coordinator'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { Reddit } from "@material-ui/icons"
 
 
 const LoginBody = styled.div`
@@ -36,6 +37,19 @@ align-items: center;
         font-weight: bolder;
         color: rgb(0, 101, 211);
     }
+`
+
+const Logo = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+color: #ff6314;
+>p{
+    margin-top: -5px;
+    font-size: 40px;
+    font-weight: 600;
+}
 `
 
 const LoginForm = styled.form`
@@ -92,12 +106,17 @@ const LoginPage = ({ setRightButtonText }) => {
         })
         .catch((err) => {
             setIsLoading(true)
-            alert(err.response.data.message)
+            alert("Houve um erro ao tentar fazer Login, tente novamente")
         })            
     }
     return (
         <LoginBody>
             <InputContainer>
+            
+            <Logo>
+            <Reddit style={{fontSize:'85px', color: '#ff6314',marginRight:'10px'}}/> <p>LabEddit</p>
+            </Logo>                
+            
                 <LoginForm onSubmit={onSubmitForm}>
                     
                     <input

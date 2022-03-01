@@ -304,14 +304,14 @@ const FeedPage = () => {
             }
         })
         .then((res)=>{
-            alert(res.data.message)
+            alert("Publicação postada com sucesso!")
             getPosts()
             clear()
             setIsLoading(false)
         })
         .catch((err)=>{
             setIsLoading(false)
-            alert(err.response.data.message)})
+            alert("Houve um erro na publicação, tente novamente")})
     }
 
     const onSubmitForm = (event) =>{

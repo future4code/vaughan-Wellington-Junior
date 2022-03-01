@@ -7,6 +7,7 @@ import axios from "axios"
 import { BASE_URL } from "../../routes/BASE_URL"
 import { goToFeedPage } from "../../routes/coordinator"
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { Reddit } from "@material-ui/icons"
 
 const RegisterBody = styled.div`
 display: flex;
@@ -33,6 +34,19 @@ align-items: center;
         font-weight: bolder;
         color: rgb(0, 101, 211);
     }
+`
+
+const Logo = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+color: #ff6314;
+>p{
+    margin-top: -5px;
+    font-size: 40px;
+    font-weight: 600;
+}
 `
 
 const RegisterForm = styled.form`
@@ -84,7 +98,7 @@ const RegisterPage = ({ setRightButtonText }) => {
         })
         .catch((err) => {
             setIsLoading(false)
-            alert(err.response.data.message)})
+            alert("Houve um erro ao tentar fazer Registro, tente novamente")})
     }
 
     const onSubmitForm = (event) => {
@@ -94,6 +108,10 @@ const RegisterPage = ({ setRightButtonText }) => {
 
     return (
         <RegisterBody>
+            <Logo>
+            <Reddit style={{fontSize:'85px', color: '#ff6314',marginRight:'10px'}}/> <p>LabEddit</p>
+            </Logo> 
+
             <InputContainer>
                 <RegisterForm onSubmit={onSubmitForm}>
                     <input

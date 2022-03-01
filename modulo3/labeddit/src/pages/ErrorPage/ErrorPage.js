@@ -7,13 +7,13 @@ const Body = styled.div`
     font-family: sans-serif;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: 94vh;
     >p{
         margin-top: 20px;
         font-size: larger;
     }
     >div{
+        margin-top: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
