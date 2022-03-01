@@ -232,12 +232,16 @@ const PostPage = () => {
 
     const [comments, setComments] = useState([])
 
-    const [isLoading, setIsLoading] = useState( false )
+    const [isLoading, setIsLoading] = useState( false )    
+
+    const [page] = useState(1)
+
+    const [size, setSize] = useState(10)
 
     useEffect(()=>{
         getPost()
         getComments()
-    },[])
+    },[size])
 
     const params = useParams()
 
@@ -356,10 +360,6 @@ const PostPage = () => {
     </CardBody>
     })
 
-    const [page] = useState(1)
-
-    const [size, setSize] = useState(10)
-
     function getComments () { 
         axios.get(`${BASE_URL}/posts/${postId}/comments?page=${page}&size=${size}`, {
         headers: {
@@ -423,8 +423,6 @@ const PostPage = () => {
         createComment()
     }
 
-    
-
     const loadMoreComments = (event) => {
         setSize(size +10)
     }
@@ -449,7 +447,7 @@ const PostPage = () => {
             </PostBody>
             {commentCard}
 
-            { comments < 10 ? <></> : <button onClick={loadMoreComments}>Carregar Mais</button> }
+            {comments.length < 10 ? <></> :  <button onClick={loadMoreComments}>Carregar Mais</button>}
 
             </div> : <Loading/>}
         </FeedBody>
