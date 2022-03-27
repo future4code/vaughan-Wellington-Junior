@@ -4,9 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "ex1": "tsc && node ./build/exercicio1.js",
+    "ex2": "tsc && node ./build/exercicio2.js",
+    "ex3": "tsc && node ./build/exercicio3.js",
+    "ex4": "tsc && node ./build/exercicio4.js",
+    "ex5": "tsc && node ./build/exercicio5.js",
+    "ex6": "tsc && node ./build/exercicio6.js",
+    "ex7": "tsc && node ./build/exercicio7.js",
+    "ex8": "tsc && node ./build/exercicio8.js",
+    "ex9": "tsc && node ./build/exercicio9.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^17.0.23",
+    "typescript": "^4.6.3"
+  }
 }
