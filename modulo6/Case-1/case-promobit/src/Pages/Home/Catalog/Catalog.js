@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import uga from '../../../uga.png'
 import MovieCard from "./MovieCard";
 
 const Catalog = styled.div`
@@ -33,11 +32,12 @@ margin: 10px;
 const MoviesGrid = styled.div`
 width: 100%;
 display: grid;
-grid-template-columns: repeat(6, 1fr);
+grid-template-columns: repeat(5, 1fr);
 gap: 2%;
 `
 
-function MovieCatalog (){
+function MovieCatalog ({movies}){
+
     return(
     <Catalog>
         <SearchBar>
@@ -49,18 +49,15 @@ function MovieCatalog (){
         </SearchBar>
 
         <MoviesGrid>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>
-            <MovieCard/>        
+            {movies?.map((movie) => {return <MovieCard
+              key={movie.id}
+              id={movie.id}
+              title={movie.title}
+              image={movie.poster_path}
+              releaseDate={movie.release_date}
+              /> 
+            })}
+                
         </MoviesGrid>
 
         <p>1 2 3 4</p>

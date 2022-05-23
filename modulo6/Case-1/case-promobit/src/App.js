@@ -1,7 +1,6 @@
 import React from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import {Route, Routes } from "react-router-dom";
 import styled from "styled-components";
-import Header from "./Components/Header/Header";
 import Home from "./Pages/Home/Home";
 import MovieDetails from "./Pages/MovieDetails/MovieDetails";
 
@@ -18,7 +17,7 @@ function App() {
     <Body>
         <Routes>
           <Route path="/" element={<Home/>}/>
-          <Route path="/details" element={<MovieDetails/>}/>
+          <Route path="/movie_info/:id" element={<MovieDetails/>}/>
         </Routes>
     </Body>
   );

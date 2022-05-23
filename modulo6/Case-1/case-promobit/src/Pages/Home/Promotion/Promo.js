@@ -1,9 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import uga from '../../../uga.png'
 
 const Promo = styled.div`
-background-image: url(${uga});
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center;
@@ -25,25 +24,46 @@ flex-direction: column;
 justify-content: center;
 width: 45%;
 color: white;
+>h4{
+  cursor: pointer;
+}
 `
 const PromoTitle = styled.div`
 display: flex;
+>h3{
+  margin-left: 8px;
+}
 `
 
-function Promotion (){
+function Promotion (movies){
+
+    const list = movies.movies.slice(0,1)    
+
+    const navigate = useNavigate()
+    
+    function goToMovie(detail){
+
+      navigate(`/movie_info/${detail}`)
+    }
+
     return(
     <Promo>        
-        <PromoDetails>
-          <PromoText>
-          <h3>Em Destaque</h3>
+        <PromoDetails>       
+        
+        {list?.map((movie) => {return <PromoText key={movie.id}>          
+            
+            <h3>Mais istos Hoje</h3>
 
-          <PromoTitle>
-            <h2>Titulo do Filme</h2> <h3>10</h3>
-          </PromoTitle>
+            <PromoTitle>
+                <h2>{movie.title}</h2> <h3>{movie.vote_average}</h3>
+            </PromoTitle>
 
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <p>Mais Detalhes</p>
-          </PromoText>                 
+            <p>{movie.overview}</p>
+            
+            <h4 onClick={() => goToMovie(movie.id)}>Mais Detalhes</h4>
+
+          </PromoText>})}
+
         </PromoDetails>        
     </Promo>)
 }

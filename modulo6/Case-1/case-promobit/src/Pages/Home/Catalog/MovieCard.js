@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import uga from '../../../uga.png'
+import { baseUrlImage } from "../../../Services/api";
 
 const MovieCardBody = styled.div`
+cursor: pointer;
 background-color: crimson;
 margin: 10px;
 padding: 1em;
@@ -21,11 +23,20 @@ align-items: center;
 `
 
 
-function MovieCard (){
+function MovieCard ({id, title, image, releaseDate}){
+    
+  const navigate = useNavigate()
+    
+    function goToMovie(detail){
+
+      navigate(`/movie_info/${detail}`)
+    }
+
+    
     return(
-    <MovieCardBody>
-        <img src={uga}/>
-        <p><b>Titulo</b><br/>2022</p>
+    <MovieCardBody key={id} onClick={() => goToMovie(id)}>
+        <img src={`${baseUrlImage}${image}`} alt={`Poster de ${title}`}/>
+        <p>{`${title} (${releaseDate.substring(0,4)})`}</p>
     </MovieCardBody>
     )
 }
