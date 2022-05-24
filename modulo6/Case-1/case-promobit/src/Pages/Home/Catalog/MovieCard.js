@@ -11,6 +11,8 @@ padding: 1em;
 display: flex;
 flex-direction: column;
 align-items: center;
+justify-content: center;
+text-align: center;
 >img{
   margin: 0;
   width: 100%;
@@ -18,7 +20,7 @@ align-items: center;
   object-fit: cover;
 }
 >p{
-  margin: 0;
+  margin: 2px;
 }
 `
 

@@ -19,7 +19,7 @@ grid-row-gap: 20px;
 grid-column-gap: 20px;
 `
 
-function MovieCatalog ({movies}){
+function SearchMovieCatalog ({movies}){
 
     return(
     <Catalog>
@@ -34,9 +34,8 @@ function MovieCatalog ({movies}){
               releaseDate={movie.release_date}
               /> 
             })}                
-        </MoviesGrid>
-        
-      </Catalog> )
+      </MoviesGrid>
+    </Catalog> )
 }
 
-export default MovieCatalog
+export default SearchMovieCatalog

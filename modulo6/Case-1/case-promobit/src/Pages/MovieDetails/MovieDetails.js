@@ -1,128 +1,145 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../Components/Header/Header";
-import MovieCast from "./MovieCast/MovieCast";
-import RelatedMovies from "./RelatedMovies/RelatedMovies";
+import Loading from "../../Components/Loading/Loading";
+import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
+import { baseUrlImage } from "../../Services/api";
+import { CastBody, CastCard, CastGrid, DetailsBody, MovieData, MovieHeader, MoviePoster, MovieScore, MovieSynopsis, MovieText, RelatedCard, RelatedGrid, RelatedMovies } from "./styled";
 
-
-const DetailsBody = styled.div`
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-`
-
-const MovieData = styled.div`
-width: 100%;
-padding-top: 30px;
-display: flex;
-background-color: brown;
-justify-content: center;
-`
-const MovieText = styled.div`
-display: flex;
-flex-direction: column;
-width: 60%;
-`
-const MoviePoster = styled.img`
-width: 250px;
-height: 400px;
-object-fit: cover;
-padding: 25px;
-`
-const MovieHeader = styled.div`
-padding: 25px;
->h2{
-margin: 0;
-}
->h4{
-margin: 0;
-}
-`
-const MovieScore = styled.div`
-
-padding: 0 25px;
->h4{
-    margin: 0;
-}
-`
-const MovieSynopsis = styled.div`
-padding: 25px;
->h3{
-margin: 0;
-padding-bottom: 8px;
-}
->p{
-margin: 0;
-}
-`
 
 function MovieDetails(){ 
     
     const {id} = useParams()
-    
-    useEffect(()=>{getDetails()},[])
 
-    const [detailData, setDetailData] = useState([])
+    const [detailData, setDetailData] = useState({})
+
+    const [credits, setCredits] = useState([])
+
+    const [similar, setSimilar]  = useState([])
+
+    const [choosenMovie, setChoosenMovie] = useState([])
     
+    const [isLoading, setIsLoading] = useState(false);
+    
+    const navigate = useNavigate()
+    
+    function goToMovie(detail){
+        setChoosenMovie(detail)        
+        navigate(`/movie_info/${detail}`)
+    }
+        
     function getDetails(){
+        setIsLoading(true)
         axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=a09e6787ebc50291006f0161353f2949&language=pt-BR`)
-        .then((res) => setDetailData(res.data))
+        .then((res) => {
+            setDetailData(res.data)
+            setIsLoading(false)
+        })
     }
 
-    function movieRuntime (time){
-        let hours = Math.floor(time/60)
-        let minutes = time % 60
-        return `${hours}h${minutes}m`
+    function getCredits(){
+        setIsLoading(true)
+        axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=a09e6787ebc50291006f0161353f2949&language=pt-BR`)
+        .then((res) => {
+            setCredits(res.data.cast.slice(0,5))
+            setIsLoading(false)
+        })
     }
 
-    function movieReleaseDate (date){
-        let year = date.substring(0,4)
-        let month = date.substring(5,7)
-        let day = date.substring(8,10)
-        return `${day}/${month}/${year}`
+    function getSimilar(){
+        setIsLoading(true)
+        axios.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=a09e6787ebc50291006f0161353f2949&language=pt-BR&page=1`)
+        .then((res) => {
+            setSimilar(res.data.results.slice(0,5))
+            setIsLoading(false)
+        })
+    }
+    
+    useEffect(()=>{
+        getDetails()
+        getCredits()
+        getSimilar()}
+        ,[choosenMovie])
+
+    function movieRuntime (){
+        let hours = Math.floor(detailData.runtime/60)
+        let minutes = detailData.runtime % 60
+        const runtime = `${hours}h${minutes}m`
+        return runtime
     }
 
-    function movieYear (date){
-        let year = date.substring(0,4)
-        return year
-    }
+    const MovieDataCard = detailData.release_date && detailData.genres != null ?  <MovieData>
+                
+    <MoviePoster src={`${baseUrlImage}${detailData.poster_path}`}/>
 
-    console.log(detailData)
+    <MovieText>
+        <MovieHeader>
+            <h2>{detailData.title} {detailData.release_date.substring(0,4)}</h2>
+            <h4>{movieRuntime()} - {detailData.genres.slice(0,3).map((movie) => {return `${movie.name}, `})} - {`${detailData.release_date.substring(8,10)}/${detailData.release_date.substring(5,7)}/${detailData.release_date.substring(0,4)}`}</h4>
+        </MovieHeader>
 
-    const movieCard = detailData.detailData.map((movie) => {return <MovieData>
+        <MovieScore>
+            <h4><b>{detailData.vote_average}</b> - Avaliação dos Usuários</h4>
+        </MovieScore>
 
-        <MoviePoster />
+        <MovieSynopsis>
+            <h3>Sinopse</h3>
+            <p>{detailData.overview}</p>
+        </MovieSynopsis>
+    </MovieText>
 
-        <MovieText>
-            <MovieHeader>
-                <h2> {movie.title} {movie.release_date}</h2>
-                <h4>{movie.runtime} - {movie.release_date}</h4>
-            </MovieHeader>
+</MovieData> : <p>Carregando</p>
 
-            <MovieScore>
-                <h4>Avaliação dos Usuários</h4>
-            </MovieScore>
-
-            <MovieSynopsis>
-                <h3>Sinopse</h3>
-                <p>{movie.overview}</p>
-            </MovieSynopsis>
-        </MovieText>
-
-    </MovieData>})
     
     return(
         <DetailsBody>
-            <Header/>
+        
+        <Header/>
 
-            {movieCard}
+        <ScrollToTop/>
 
-            <MovieCast/>
+        {isLoading ? <Loading/> : <div>
+            
+            {MovieDataCard}
+            
+            <CastBody>        
+                <h2>Elenco</h2>                
+                <CastGrid>
+                    {credits != null ? credits.map((credit) => {
+                        return <CastCard key={credit.cast_id}>
+                            <img src={`${baseUrlImage}${credit.profile_path}`} alt={`${credit.name}`}/>
+                                
+                            <div>
+                                <h4>{credit.character}</h4>
+                                <p>{credit.name}</p>
+                            </div>            
+                    </CastCard>}) : <p>Carregando</p>}
+                </CastGrid>    
+            </CastBody>
 
-            <RelatedMovies/>
+            <RelatedMovies>
+                <h2> Filmes Semelhantes</h2>
+
+                <RelatedGrid>
+                    {similar != null ? similar.map((movie) => {
+                        return <RelatedCard key={movie.id} onClick={() => goToMovie(movie.id)}>
+                        <img src={`${baseUrlImage}${movie.poster_path}`} alt={`${movie.title}`}/>                
+                    
+                        <h4>{`${movie.title} (${movie.release_date.substring(0,4)})`}</h4>
+                    </RelatedCard> 
+                    }) : <p>Carregando</p>}
+                              
+                </RelatedGrid>
+
+            </RelatedMovies>
+        </div>}
+        
+        
+
+            
+            
+            
 
         </DetailsBody>
     )
