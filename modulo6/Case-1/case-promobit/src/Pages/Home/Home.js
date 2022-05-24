@@ -1,44 +1,12 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Promotion from "./Promotion/Promo";
 import MovieCatalog from "./Catalog/Catalog";
 import Header from "../../Components/Header/Header";
 import { apiKey, baseUrlMovie} from "../../Services/api";
 import axios from "axios";
 import SearchMovieCatalog from "./Catalog/SearchCatalog";
-import { clear } from "@testing-library/user-event/dist/clear";
 import Loading from "../../Components/Loading/Loading";
-
-const HomeBody = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-width: 100%;
-`
-
-const Pagination = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-`
-const SearchBar = styled.div`
-background-color: red;
-display: flex;
-justify-content: space-between;
-align-items: center;
-width: 100%;
->input{
-    margin: 10px;
-}
-`
-
-const SearchButtons = styled.div`
-margin: 10px;
->button{
-    padding: 2px 10px;
-    margin: 0 5px;
-}
-`
+import { FilterSelect, HomeBody, Pagination, PaginationButton, PaginationButtonActive, ResetButton, SearchBar, SearchButton, SearchInput, SearchToolbar } from "./styled";
 
 function Home (){
 
@@ -63,24 +31,36 @@ function Home (){
   const pages = totalPages
 
   function goToNextPage(){
+      setIsLoading(true)
       setCurrentPage((page) => page + 1)
       window.scrollTo(0,0)
+      setIsLoading(false)
   }
   
   function goToPreviousPage(){
+      setIsLoading(true)
       setCurrentPage((page) => page - 1)
       window.scrollTo(0,0)
+      setIsLoading(false)
   }
   function changePage(event) {
-  const pageNumber = Number(event.target.textContent);
-  setCurrentPage(pageNumber) 
-  window.scrollTo(0,0)
+      setIsLoading(true)
+      const pageNumber = Number(event.target.textContent);      
+      setCurrentPage(pageNumber) 
+      window.scrollTo(0,0)
+      setIsLoading(false)
   }
   
   const getPaginationGroup = () => {
-      let start = Math.floor((currentPage - 1) / 5) * 5;
-      return new Array(5).fill().map((_, idx) => start + idx + 1);
+      if (totalPages >=5){
+        let start = Math.floor((currentPage - 1) / 5) * 5;
+        return new Array(5).fill().map((_, idx) => start + idx + 1);
+      } else if (totalPages < 5 ){
+        let start = Math.floor((currentPage - 1) / totalPages) * totalPages;
+        return new Array(totalPages).fill().map((_, idx) => start + idx + 1);
+      }      
   };
+  
 
   function getTrendingMovies(){
   axios.get(`https://api.themoviedb.org/3/trending/movie/day?${apiKey}&language=pt-BR&`)
@@ -127,7 +107,6 @@ function Home (){
   function handleSearchSubmit (event){
     setCurrentPage(1)  
     getSearchResults()
-    console.log(search, isSearching, searchResults) 
   }
 
   useEffect(()=>{
@@ -143,46 +122,46 @@ function Home (){
       <Header/>
 
       {isLoading? <Loading/> : 
-      <div>
+      <div>        
         <Promotion movies={trendingMovies}/>
 
-        <SearchBar>
-            <SearchButtons>
-              <label>Ordernar por </label>
-              <select name="ordenar por" value={orderBy} onChange={e => setOrderBy(e.target.value)}>
-                <option value={'popular'}>Popularidade</option>
-                <option value={'mostrated'}>Maior Avaliação</option>
-              </select>
-              
-              </SearchButtons>
-              <div>              
-                <input
+        <SearchBar> 
+              <SearchToolbar>              
+                <SearchInput
+                  onKeyPress={(e) => {if (e.key === "Enter"){handleSearchSubmit()} else {  }} }
                   type='text'
-                  placeholder="Pesquisar por filme..."
+                  placeholder="Pesquisar..."
                   onChange={e => setSearch(e.target.value)}              
                 />
+                <SearchButton onClick={() => handleSearchSubmit()}>Buscar</SearchButton>                              
+              </SearchToolbar>
 
-                <button onClick={() => handleSearchSubmit()}>Buscar</button>
-                              
-              </div>         
-              
+            {isSearching === true ? <ResetButton onClick={() => setSearchResults(null) & setIsSearching(false)}>Resetar</ResetButton> : <SearchToolbar>
+              <label>Ordernar por </label>
+              <FilterSelect name="ordenar por" value={orderBy} onChange={e => setOrderBy(e.target.value)}>
+                <option value={'popular'}>Popularidade</option>
+                <option value={'mostrated'}>Maior Avaliação</option>
+              </FilterSelect>              
+            </SearchToolbar>}                     
         </SearchBar>
 
-        {searchResults ? <SearchMovieCatalog movies={searchResults}/> : <MovieCatalog movies={movies}/>}
+        {isSearching === true & searchResults !== null ? <SearchMovieCatalog movies={searchResults}/> : <MovieCatalog movies={movies}/>}
 
-        <Pagination>
-          {currentPage === 1 ? null : <button onClick={goToPreviousPage}>{`<`}</button>}
-          {getPaginationGroup().map((item, index) => (
-            <button
-              key={index}
-              onClick={changePage}
-              className={`paginationItem ${currentPage === item ? 'active' : null}`}
-            >
-            <span>{item}</span>
-            </button>
+        {totalPages <= 1 ? null : <Pagination>         
+          
+          {currentPage === 1 ? null : <PaginationButton onClick={goToPreviousPage}>{`<`}</PaginationButton>}
+          
+          {getPaginationGroup().map((item, index) => (<>
+          {currentPage === item ? <PaginationButtonActive key={index} onClick={changePage} 
+          >{item}</PaginationButtonActive> : <PaginationButton key={index} onClick={changePage} 
+          >{item}</PaginationButton>}            
+          </>
           ))}
-          {currentPage === pages ? null : <button onClick={goToNextPage}>{`>`}</button>}
-        </Pagination>      
+          
+          {currentPage === pages ? null : <PaginationButton onClick={goToNextPage}>{`>`}</PaginationButton>}
+
+        </Pagination>}
+              
       </div>} 
     </HomeBody>        
     )

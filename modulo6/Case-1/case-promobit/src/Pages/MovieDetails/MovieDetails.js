@@ -5,8 +5,8 @@ import Header from "../../Components/Header/Header";
 import Loading from "../../Components/Loading/Loading";
 import ScrollToTop from "../../Components/ScrollToTop/ScrollToTop";
 import { baseUrlImage } from "../../Services/api";
-import { CastBody, CastCard, CastGrid, DetailsBody, MovieData, MovieHeader, MoviePoster, MovieScore, MovieSynopsis, MovieText, RelatedCard, RelatedGrid, RelatedMovies } from "./styled";
-
+import { CastBody, CastCard, CastGrid, DetailsBody, DetailsCard, MovieData, MovieHeader, MoviePoster, MovieScore, MovieSynopsis, MovieText, NoImageError, RelatedCard, RelatedGrid, RelatedMovies } from "./styled";
+import NoImage from '../../Images/no-photos.png'
 
 function MovieDetails(){ 
     
@@ -42,7 +42,7 @@ function MovieDetails(){
         setIsLoading(true)
         axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=a09e6787ebc50291006f0161353f2949&language=pt-BR`)
         .then((res) => {
-            setCredits(res.data.cast.slice(0,5))
+            setCredits(res.data.cast.slice(0,6))
             setIsLoading(false)
         })
     }
@@ -51,7 +51,7 @@ function MovieDetails(){
         setIsLoading(true)
         axios.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=a09e6787ebc50291006f0161353f2949&language=pt-BR&page=1`)
         .then((res) => {
-            setSimilar(res.data.results.slice(0,5))
+            setSimilar(res.data.results.slice(0,6))
             setIsLoading(false)
         })
     }
@@ -70,23 +70,30 @@ function MovieDetails(){
     }
 
     const MovieDataCard = detailData.release_date && detailData.genres != null ?  <MovieData>
+    
+    {detailData.poster_path ? <MoviePoster src={`${baseUrlImage}${detailData.poster_path}`}/>:
+    <NoImageError src={NoImage}/>
+    }
                 
-    <MoviePoster src={`${baseUrlImage}${detailData.poster_path}`}/>
+    
 
     <MovieText>
         <MovieHeader>
-            <h2>{detailData.title} {detailData.release_date.substring(0,4)}</h2>
-            <h4>{movieRuntime()} - {detailData.genres.slice(0,3).map((movie) => {return `${movie.name}, `})} - {`${detailData.release_date.substring(8,10)}/${detailData.release_date.substring(5,7)}/${detailData.release_date.substring(0,4)}`}</h4>
+            <h2>{detailData.title} {`(${detailData.release_date.substring(0,4)})`}</h2>
+            <h4>{detailData.genres.slice(0,3).map((movie) => {return `${movie.name}, `})} - {movieRuntime()} - {`${detailData.release_date.substring(8,10)}/${detailData.release_date.substring(5,7)}/${detailData.release_date.substring(0,4)}`}</h4>
         </MovieHeader>
 
         <MovieScore>
-            <h4><b>{detailData.vote_average}</b> - Avaliação dos Usuários</h4>
+            <h4><b>{detailData.vote_average}</b> - Avaliação</h4>
         </MovieScore>
 
-        <MovieSynopsis>
+        {detailData.overview ? <MovieSynopsis>
             <h3>Sinopse</h3>
             <p>{detailData.overview}</p>
-        </MovieSynopsis>
+        </MovieSynopsis>  : <MovieSynopsis>
+            <h3>Não há sinopse dísponivel</h3>
+        </MovieSynopsis> }
+        
     </MovieText>
 
 </MovieData> : <p>Carregando</p>
@@ -99,7 +106,7 @@ function MovieDetails(){
 
         <ScrollToTop/>
 
-        {isLoading ? <Loading/> : <div>
+        {isLoading ? <Loading/> : <DetailsCard>
             
             {MovieDataCard}
             
@@ -108,7 +115,10 @@ function MovieDetails(){
                 <CastGrid>
                     {credits != null ? credits.map((credit) => {
                         return <CastCard key={credit.cast_id}>
-                            <img src={`${baseUrlImage}${credit.profile_path}`} alt={`${credit.name}`}/>
+                            {credit.profile_path ? <img src={`${baseUrlImage}${credit.profile_path}`} alt={`${credit.name}`}/> : 
+                            <img src={NoImage} alt={`${credit.name}`}/>
+                            }
+                            
                                 
                             <div>
                                 <h4>{credit.character}</h4>
@@ -133,13 +143,7 @@ function MovieDetails(){
                 </RelatedGrid>
 
             </RelatedMovies>
-        </div>}
-        
-        
-
-            
-            
-            
+        </DetailsCard>}           
 
         </DetailsBody>
     )
