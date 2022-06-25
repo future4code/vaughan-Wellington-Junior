@@ -8,12 +8,11 @@ import ScreenLotomania from "./Components/Pages/ScreenLotomania/ScreenLotomania"
 import ScreenTimemania from "./Components/Pages/ScreenTimemania/ScreenTimemania";
 import ScreenDiadesorte from "./Components/Pages/ScreenDiadesorte/ScreenDiadesorte";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Loading from "./Components/Loading/Loading";
 import Home from "./Components/Pages/Home/Home";
+import ErrorPage from "./Components/Pages/ErrorPage/ErrorPage";
 
 
 function App() {
-  const [isLoading, setIsLoading] = useState(false)
   const [loteriasConcursos, setLoteriasConcursos] = useState([])
   
   useEffect(()=>{
@@ -47,6 +46,7 @@ function App() {
           <Route path="/lotomania" element={<ScreenLotomania arrayLoterias={getId(3)}/>}/>
           <Route path="/timemania" element={<ScreenTimemania arrayLoterias={getId(4)}/>}/>
           <Route path="/diadesorte" element={<ScreenDiadesorte arrayLoterias={getId(5)}/>}/>
+          <Route path="*" element={<ErrorPage/>}/>
         </Routes>
       </BrowserRouter>
     </MainBody>

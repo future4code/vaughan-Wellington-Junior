@@ -17,7 +17,6 @@ export default function Home(){
                 <ButtonsStyled style={{ backgroundColor: '#5AAD7D'}} onClick={()=> navigate('/timemania')}>TIMEMANIA</ButtonsStyled>
                 <ButtonsStyled style={{ backgroundColor: '#BFAF83'}} onClick={()=> navigate('/diadesorte')}>DIA DE SORTE</ButtonsStyled>
             </ButtonsDiv>
-
         </BodyHome>
     )
 }
